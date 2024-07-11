@@ -47,12 +47,48 @@ export class ChatSocket {
         this.chatSocket.on("disconnect", () => {
             console.log("Connection closed");
             this.connecting = false;
-            store.setState({ connectionState: "disconnected" });
+            store.setState({
+                connectionState: "disconnected",
+                loginState: "not-login",
+            });
+        });
+
+         this.chatSocket.on("success-login", (data) => {
+            console.log(data);
+            store.setState({
+                currentPage: 'chat',
+                loginState: "login",
+                error: null,
+                username: data.username,
+                userCode: data.userCode,
+                sid: data.sid,
+            });
+        });
+
+        this.chatSocket.on("failed-login", (error) => {
+            store.setState({
+                error: error,
+            });
         });
     }
 
     public message(messageText: string) {
         if (!this.chatSocket) return;
         this.chatSocket.emit("message", messageText)
+    }
+
+    public auto_login(token: string | null) {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit("auto_login", token);
+    }
+
+    public login(email: string, password: string) {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit("login", {'email': email, 'password': password});
+    }
+
+    public logout() {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit("logout");
     }
 }
