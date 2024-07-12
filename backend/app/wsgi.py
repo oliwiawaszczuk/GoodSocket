@@ -1,65 +1,40 @@
 from flask import Flask, request
 from flask_socketio import SocketIO
 
+from routes.login import create_login_routes
+from user import User, users
+
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
-
-users = {}
 
 
 @socketio.on('connect')
 def connect():
     sid = request.sid
     print(f"connected sid: {sid}")
-    users[sid] = {'connected': True, 'sid': sid}
-    # for user in users:
-    #     print(user)
+    users[sid] = User('', '', '', sid)
+    for x in users:
+        print(users[x].__str__())
 
 
 @socketio.on('disconnect')
 def disconnect():
     sid = request.sid
     print(f"disconnected sid: {sid}")
-    users[sid]['connected'] = False
-    # if sid in users:
-    #     users.pop(sid)
+    if sid in users:
+        users[sid].disconnect()
 
 
 @socketio.on('message')
 def message(message):
     sid = request.sid
+    print(f'USERS: {users}')
     print(f"message {message}, from sid: {sid} and user: {users[sid]}")
 
 
-@socketio.on('auto_login')
-def auto_login(token):
-    sid = request.sid
-    if token:
-        print(f'try to auth login with token {token}')
-        if token == 'admin':
-            print('login to admin')
-            login({'email': 'admin', 'password': 'admin'}, sid)
-        if token in users:
-            print(users[token])
-            login({'email': users[token]['email'], 'password': users[token]['password']}, sid)
-
-
-@socketio.on('login')
-def login(data, sid=None):
-    if sid is None:
-        sid = request.sid
-    email = data.get('email', '').strip()
-    password = data.get('password', '').strip()
-    if email == '' or password == '':
-        socketio.emit('failed-login', 'fields email and password cannot be empty', to=sid)
-    else:
-        if sid in users:
-            users[sid]['email'] = email
-            users[sid]['password'] = password
-            socketio.emit('success-login', {'email': email, 'password': password, 'username': 'user/name', 'userCode': 444, 'sid': sid}, to=sid)
-        else:
-            print(f"No user data found for sid {sid}")
-
-
 if __name__ == '__main__':
+    b_user = User('b', 'b@b', 'b', 'b')
+    users['b'] = b_user
+
+    create_login_routes(socketio)
     socketio.run(app, port=5000, allow_unsafe_werkzeug=True, debug=True)

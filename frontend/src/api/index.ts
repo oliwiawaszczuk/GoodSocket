@@ -86,6 +86,10 @@ export class ChatSocket {
         if (!this.chatSocket) return;
         this.chatSocket.emit("login", {'email': email, 'password': password});
     }
+    public register(username: string, email: string, password: string) {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit("register", {'username': username, 'email': email, 'password': password});
+    }
 
     public logout() {
         if (!this.chatSocket) return;
