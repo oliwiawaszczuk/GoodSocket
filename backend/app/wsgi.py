@@ -26,9 +26,9 @@ def disconnect():
 
 
 @socketio.on('message')
-def message(message):
+def message(_message):
     sid = request.sid
-    print(f"message {message}, from sid: {sid} and user: {users[sid]}")
+    print(f"message {_message}, from sid: {sid} and user: {users[sid]}")
 
 
 @socketio.on('auto_login')
@@ -56,9 +56,28 @@ def login(data, sid=None):
         if sid in users:
             users[sid]['email'] = email
             users[sid]['password'] = password
-            socketio.emit('success-login', {'email': email, 'password': password, 'username': 'user/name', 'userCode': 444, 'sid': sid}, to=sid)
+            socketio.emit('success-login', {'email': email, 'username': 'user/name', 'userCode': 444, 'sid': sid}, to=sid)
         else:
             print(f"No user data found for sid {sid}")
+
+
+@socketio.on("register")
+def register(data):
+    sid = request.sid
+    username = data.get('username', '').strip()
+    email = data.get('email', '').strip()
+    password = data.get('password', '').strip()
+
+    if email == '' or password == '':
+        socketio.emit('failed-login', 'fields email and password cannot be empty', to=sid)
+        return
+
+    users[sid] = {
+        "username": username,
+        "email": email,
+        "password": password
+    }
+    socketio.emit('success-login', {'email': email, 'username': 'user/name', 'userCode': 444, 'sid': sid}, to=sid)
 
 
 if __name__ == '__main__':
