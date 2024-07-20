@@ -8,7 +8,7 @@ export const store = create<{
     username: string | null;
     userCode: number | null;
     error: string | null;
-    sid: string | null;
+    token: string | null;
 }>(() => {
     return {
         connectionState: "not-connected",
@@ -17,6 +17,6 @@ export const store = create<{
         username: null,
         userCode: null,
         error: null,
-        sid: null,
+        token: null,
     };
 });

@@ -24,16 +24,15 @@ export default function Home() {
 
     useEffect(() => {
         if (storage.loginState === "login") {
-            if (typeof storage.sid === "string") {
-                sessionStorage.setItem('token', storage.sid);
+            if (typeof storage.token === "string") {
+                sessionStorage.setItem('token', storage.token);
             }
         }
-    }, [storage.loginState, storage.sid]);
+    }, [storage.loginState, storage.token]);
 
 
     return (
         <div>
-            <p className='m-3'>{storage.sid}</p>
             {storage.connectionState === "connected" &&
                 <>
                     {storage.loginState === "not-login" && <LoginPage/>}
