@@ -17,4 +17,12 @@ def create_app(db, migrate):
     db.init_app(app)
     migrate.init_app(app, db)
 
+    from routes.connect import create_connect_routes
+    from routes.login import create_login_routes
+    from routes.message import create_message_routes
+
+    create_connect_routes(socketio)
+    create_login_routes(socketio)
+    create_message_routes(socketio)
+
     return app, socketio
