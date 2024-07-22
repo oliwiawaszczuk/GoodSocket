@@ -1,6 +1,19 @@
 import socketIOClient, {Socket} from "socket.io-client";
 import {store} from "@/api/store";
 
+interface InvitationItem {
+    id: number;
+    username: string;
+    userCode: string;
+}
+
+interface FriendItem {
+    id: number;
+    username: string;
+    userCode: string;
+    conv_id: number;
+}
+
 export class ChatSocket {
     chatSocket: Socket | undefined;
     static _instance: ChatSocket | undefined;
@@ -42,6 +55,9 @@ export class ChatSocket {
             console.log("Connection opened");
             this.connecting = false;
             store.setState({connectionState: "connected"});
+
+            this.getInvitations();
+            this.getFriendsList();
         });
 
         this.chatSocket.on("disconnect", () => {
@@ -70,11 +86,19 @@ export class ChatSocket {
                 error: error,
             });
         });
+
+        this.chatSocket.on("invitations_list", (data: InvitationItem[]) => {
+            store.setState({ invitationsList: data });
+        });
+
+        this.chatSocket.on("friends_list", (data: FriendItem[]) => {
+            store.setState({ friendsList: data });
+        });
     }
 
-    public message(messageText: string) {
+    public new_message(messageText: string) {
         if (!this.chatSocket) return;
-        this.chatSocket.emit("message", messageText);
+        this.chatSocket.emit("add_new_message", {"text": messageText, "conv_id": store.getState().currentConversationId});
     }
 
     public auto_login(token: string | null) {
@@ -102,5 +126,20 @@ export class ChatSocket {
             username: null,
             userCode: null,
         });
+    }
+
+    private getInvitations() {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit('get_invitations');
+    }
+
+    private getFriendsList() {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit('get_friends_list');
+    }
+
+    public AddNewInvitation(inputValue: string | null) {
+        if (!this.chatSocket) return;
+        this.chatSocket.emit('add_new_invitation', inputValue);
     }
 }

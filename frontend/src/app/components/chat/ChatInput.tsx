@@ -2,14 +2,14 @@
 
 
 import React, {useState} from "react";
+import {ChatSocket} from "@/api";
 
 const ChatInput: React.FC = () => {
   const [message, setMessage] = useState("");
 
     const sendMessage = () => {
-        // socket.emit("message", { text: message, 'session': getCookie('session'), 'currentConversationId': currentConversationId });
-        // setMessage("");
-        // chatSocket.emit('check_sid', localStorage.getItem('token'))
+        ChatSocket.instance().new_message(message);
+        setMessage("");
     };
 
   return (

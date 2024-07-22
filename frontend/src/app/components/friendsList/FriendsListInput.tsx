@@ -2,12 +2,13 @@
 
 
 import React, {useState} from "react";
+import {ChatSocket} from "@/api";
 
 const FriendsListInput: React.FC = () => {
     const [inputValue, setInputValue] = useState("");
 
     const AddNewFriend = () => {
-
+        ChatSocket.instance().AddNewInvitation(inputValue)
     }
 
     return (

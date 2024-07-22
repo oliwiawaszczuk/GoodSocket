@@ -1,7 +1,7 @@
 from flask import request
 
 
-def create_connect_routes(socketio):
+def create_socket_routes(socketio):
     @socketio.on('connect')
     def connect():
         sid = request.sid

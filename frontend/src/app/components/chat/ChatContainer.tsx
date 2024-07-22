@@ -13,7 +13,6 @@ const ChatContainer: React.FC = () => {
       <div className="w-full h-full flex flex-col overflow-hidden">
           <div className="flex-1 overflow-auto">
               <ChatMessagesBox/>
-              <button onClick={() => { ChatSocket.instance().message('444') }}>SEND MSG</button>
           </div>
           <div className="h-14 ms:h-30 flex-none">
               <ChatInput/>

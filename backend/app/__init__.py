@@ -17,12 +17,14 @@ def create_app(db, migrate):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from routes.connect import create_connect_routes
+    from routes.socket import create_socket_routes
     from routes.login import create_login_routes
     from routes.message import create_message_routes
+    from routes.friendsList import create_friends_list_routes
 
-    create_connect_routes(socketio)
+    create_socket_routes(socketio)
     create_login_routes(socketio)
     create_message_routes(socketio)
+    create_friends_list_routes(socketio)
 
     return app, socketio

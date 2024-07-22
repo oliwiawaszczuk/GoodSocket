@@ -3,22 +3,10 @@
 import React, { useState, useEffect } from "react";
 import FriendItemToList from "./FriendItemToList";
 import InvitationItemToList from "./InvitationItemToList";
-
-interface InvitationItem {
-    id: number;
-    username: string;
-    userCode: string;
-}
-
-interface FriendItem {
-    id: number;
-    username: string;
-    userCode: string;
-}
+import {store} from "@/api/store";
 
 const FriendsListBox: React.FC = () => {
-    const [friendsList, setFriendsList] = useState<FriendItem[]>([]);
-    const [invitationsList, setInvitationsList] = useState<InvitationItem[]>([]);
+    const storage = store();
 
     // useEffect(() => {
     //     chatSocket.emit('get_invitations');
@@ -46,11 +34,11 @@ const FriendsListBox: React.FC = () => {
 
     return (
         <div>
-            {invitationsList.map(item => (
+            {storage.invitationsList.map(item => (
                 <InvitationItemToList key={item.id} id={item.id} username={item.username} userCode={item.userCode} />
             ))}
-            {friendsList.map(item => (
-                <FriendItemToList key={item.id} id={item.id} username={item.username} userCode={item.userCode} />
+            {storage.friendsList.map(item => (
+                <FriendItemToList key={item.id} id={item.id} username={item.username} userCode={item.userCode} conv_id={item.conv_id}/>
             ))}
         </div>
     );

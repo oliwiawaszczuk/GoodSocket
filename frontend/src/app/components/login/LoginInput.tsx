@@ -12,7 +12,7 @@ const LoginInput: React.FC<LoginInputProps> = ({setLogin}) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
-    const storage = store()
+    const storage = store();
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
