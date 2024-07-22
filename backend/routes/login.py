@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask import request
 
+from app.lock import requires_lock
 from app.query import check_is_email_exist, create_new_user, create_new_connection, get_user_by_sid, \
     get_connection_by_token_if_exist_connect, delete_connection_by_token
 from lib.creator import create_user_code, create_token
@@ -10,6 +11,7 @@ from lib.hash import verify_password
 
 def create_login_routes(socketio):
     @socketio.on('auto_login')
+    @requires_lock
     def auto_login(token):
         sid = request.sid
         if token:
@@ -20,6 +22,7 @@ def create_login_routes(socketio):
                               {'username': user.username, 'userCode': user.code, 'token': connection.token}, to=sid)
 
     @socketio.on('login')
+    @requires_lock
     def login(data, sid=None):
         if sid is None:
             sid = request.sid
@@ -45,6 +48,7 @@ def create_login_routes(socketio):
                       {'email': email, 'username': user.username, 'userCode': user.code, 'token': token}, to=sid)
 
     @socketio.on("register")
+    @requires_lock
     def register(data):
         sid = request.sid
         username = data.get('username', '').strip()
@@ -67,6 +71,7 @@ def create_login_routes(socketio):
         socketio.emit('success-login', {'email': email, 'username': username, 'userCode': code, 'token': token}, to=sid)
 
     @socketio.on('logout')
+    @requires_lock
     def logout(data):
         token = data.get('token', '').strip()
         delete_connection_by_token(token)
