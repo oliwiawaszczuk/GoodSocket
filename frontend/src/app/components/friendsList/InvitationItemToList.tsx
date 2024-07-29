@@ -2,6 +2,7 @@
 
 
 import React, {useState} from "react";
+import {ChatSocket} from "@/api";
 
 interface DataInterface {
     id: number;
@@ -13,10 +14,12 @@ const InvitationItemToList: React.FC<DataInterface> = ({id, username, userCode})
 
     function acceptInvitation() {
         // chatSocket.emit('accept_invitation', id)
+        ChatSocket.instance().AcceptInvitation(id);
     }
 
     function declineInvitation() {
         // chatSocket.emit('decline_invitation', id)
+        ChatSocket.instance().DeclineInvitation(id);
     }
 
     return (

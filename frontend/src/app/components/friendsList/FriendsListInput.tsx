@@ -3,12 +3,15 @@
 
 import React, {useState} from "react";
 import {ChatSocket} from "@/api";
+import {store} from "@/api/store";
 
 const FriendsListInput: React.FC = () => {
     const [inputValue, setInputValue] = useState("");
+    const storage = store();
 
     const AddNewFriend = () => {
-        ChatSocket.instance().AddNewInvitation(inputValue)
+        ChatSocket.instance().AddNewInvitation(inputValue);
+        setInputValue("");
     }
 
     return (
@@ -20,7 +23,7 @@ const FriendsListInput: React.FC = () => {
                   className="flex-1 p-2.5 rounded-md text-base w-full text-text_yellow bg-f_yellow border-4 border-gray-800 placeholder:text-placeholder_dark text-b_blue_dark"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Type user#code here..."
+                  placeholder={storage.error ? storage.error : "Type user#code here..." }
               />
           </div>
           {/*  BUTTON TO ADD NEW FRIEND */}

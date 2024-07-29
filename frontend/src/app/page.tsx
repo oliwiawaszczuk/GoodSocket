@@ -27,6 +27,9 @@ export default function Home() {
             if (typeof storage.token === "string") {
                 sessionStorage.setItem('token', storage.token);
             }
+            document.title = "praChat - " + storage.username;
+        } else {
+            document.title = "praChat";
         }
     }, [storage.loginState, storage.token]);
 

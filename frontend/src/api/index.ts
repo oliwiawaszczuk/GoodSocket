@@ -88,12 +88,18 @@ export class ChatSocket {
 
     this.chatSocket.on("invitations_list", (data: InvitationItem[]) => {
       console.log("Got invitations list!", data);
-      store.setState({ invitationsList: data });
+      store.setState({ invitationsList: data, error: null });
     });
 
     this.chatSocket.on("friends_list", (data: FriendItem[]) => {
       console.log("Got friends list!", data);
-      store.setState({ friendsList: data });
+      store.setState({ friendsList: data, error: null });
+    });
+
+    this.chatSocket.on("failed_request_end_with_error", (error) => {
+      store.setState({
+        error: error,
+      });
     });
   }
 
@@ -142,5 +148,15 @@ export class ChatSocket {
   public AddNewInvitation(inputValue: string | null) {
     if (!this.chatSocket) return;
     this.chatSocket.emit("add_new_invitation", inputValue);
+  }
+
+  public AcceptInvitation(id: number | null) {
+    if (!this.chatSocket) return;
+    this.chatSocket.emit("accept_invitation", id);
+  }
+
+  public DeclineInvitation(id: number | null) {
+    if (!this.chatSocket) return;
+    this.chatSocket.emit("decline_invitation", id);
   }
 }

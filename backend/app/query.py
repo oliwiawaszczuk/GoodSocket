@@ -63,6 +63,14 @@ def delete_connection_by_token(token):
     return False
 
 
+def get_sid_by_user_id(user_id):
+    connections = Connection.query.filter_by(user_id=user_id).all()
+    connections_sid = []
+    for connection in connections:
+        connections_sid.append(connection.sid)
+    return connections_sid
+
+
 # FRIENDS RELATIONS
 def get_every_friends_id_for_user_id(user_id):
     relations1 = FriendsRelation.query.filter_by(user1_id=user_id).all()
@@ -101,6 +109,8 @@ def accept_invitation_by_users_id(user1_id, user2_id):
         db.session.add(friend_relation)
         db.session.commit()
 
+    return friend_relation
+
 
 def decline_invitation_by_users_id(user1_id, user2_id):
     invitation = Invite.query.filter_by(inviter_user_id=user1_id, invitee_user_id=user2_id).first()
@@ -110,9 +120,18 @@ def decline_invitation_by_users_id(user1_id, user2_id):
 
 
 def invite_friend_by_users_id(inviter_user_id, invitee_user_id):
+    invitation = Invite.query.filter_by(inviter_user_id=inviter_user_id, invitee_user_id=invitee_user_id).first()
+    if invitation:
+        return "User already invited"
+
+    invitation = Invite.query.filter_by(inviter_user_id=invitee_user_id, invitee_user_id=inviter_user_id).first()
+    if invitation:
+        return "You are already invited"
+
     invitation = Invite(inviter_user_id, invitee_user_id, datetime.now())
     db.session.add(invitation)
     db.session.commit()
+    return "success"
 
 
 # MESSAGES

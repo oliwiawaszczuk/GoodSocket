@@ -8,30 +8,6 @@ import {store} from "@/api/store";
 const FriendsListBox: React.FC = () => {
     const storage = store();
 
-    // useEffect(() => {
-    //     chatSocket.emit('get_invitations');
-    //
-    //     chatSocket.on('invitations_list', (data: InvitationItem[]) => {
-    //         setInvitationsList(data);
-    //     });
-    //
-    //     return () => {
-    //         chatSocket.off('invitations_list');
-    //     };
-    // }, []);
-    //
-    // useEffect(() => {
-    //     chatSocket.emit('get_friends_list');
-    //
-    //     chatSocket.on('friends_list', (data: FriendItem[]) => {
-    //         setFriendsList(data);
-    //     });
-    //
-    //     return () => {
-    //         chatSocket.off('friends_list');
-    //     };
-    // }, []);
-
     return (
         <div>
             {storage.invitationsList.map(item => (
