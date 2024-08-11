@@ -50,14 +50,7 @@ const ChatMessagesBox: React.FC = () => {
     return (
     <div className='p-2 flex-1 overflow-y-auto'>
         {messages.map((msg, index) => (
-            <div key={index} className="bg-b_blue_dark2 px-2 py-1 rounded-xl">
-                <div className="text-gray-300 text-sm">
-                    {new Date(msg.date_and_hour).toLocaleString()}
-                </div>
-                <div className="text-gray-400 mt-1">
-                    <span className={storage.username === msg.username ? "text-blue-400" : "text-green-300"}> {msg.username}: </span> {msg.message}
-                </div>
-            </div>
+            <Message msg={msg} key={index}/>
         ))}
     </div>
     );

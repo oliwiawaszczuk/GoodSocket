@@ -109,7 +109,7 @@ def accept_invitation_by_users_id(user1_id, user2_id):
         db.session.add(friend_relation)
         db.session.commit()
 
-    return friend_relation
+        return friend_relation
 
 
 def decline_invitation_by_users_id(user1_id, user2_id):
@@ -122,16 +122,16 @@ def decline_invitation_by_users_id(user1_id, user2_id):
 def invite_friend_by_users_id(inviter_user_id, invitee_user_id):
     invitation = Invite.query.filter_by(inviter_user_id=inviter_user_id, invitee_user_id=invitee_user_id).first()
     if invitation:
-        return "User already invited"
+        return {'message': "User already invited"}
 
     invitation = Invite.query.filter_by(inviter_user_id=invitee_user_id, invitee_user_id=inviter_user_id).first()
     if invitation:
-        return "You are already invited"
+        return {'message': "You are already invited"}
 
     invitation = Invite(inviter_user_id, invitee_user_id, datetime.now())
     db.session.add(invitation)
     db.session.commit()
-    return "success"
+    return {'invitation': invitation, 'message': "success"}
 
 
 # MESSAGES

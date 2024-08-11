@@ -55,8 +55,7 @@ export class ChatSocket {
       this.connecting = false;
       store.setState({ connectionState: "connected" });
 
-      this.getInvitations();
-      this.getFriendsList();
+
     });
 
     this.chatSocket.on("disconnect", () => {
@@ -78,6 +77,9 @@ export class ChatSocket {
         userCode: data.userCode,
         token: data.token,
       });
+
+      this.getInvitations();
+      this.getFriendsList();
     });
 
     this.chatSocket.on("failed-login", (error) => {
